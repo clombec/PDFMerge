@@ -84,37 +84,3 @@ goButton.pack()
 
 
 window.mainloop()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-""" TEST UNIQUEMENT
-# Ce chemin doit être adapté au dossier qui contient les pdf scannés, en cas de changement, ne pas oublier les doubles \\
-path = "C:\\Users\\lomba\\Dropbox\\Christophe\\Temp\\Test"
-
-# Ce chemin est le dossier par défaut dans lequel sera enregistré le fichier pdf généré. Il peut être modifié, mais ne pas oublier les doubles \\, ainsi que le \\ final
-destFolder = "C:\\Users\\lomba\\Dropbox\\Christophe\\Temp\\"
-
-total = input("Combien de pages ???")  # Python 3
-totalNb = int(total)
-print(totalNb)
-#print(fourdigits(totalNb))
-
-file = input("Nom du fichier de sortie ???")  # Python 3
-
-pdfmerge.pdfMergeCore(totalNb, file, destFolder, path)
-"""
-
-
-
-
