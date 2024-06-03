@@ -4,24 +4,13 @@ import tkinter as tk
 from tkinter import filedialog
 import os
 
-lastClickIndex = -1
 fileList = {}
+lastLineNum = -1
+
 
 def clearFileSelection():
     for i in fileList:
         fileList[i] = False
-
-def invertSelection(fileName):
-    print(fileName)
-    print(fileList[fileName])
-    if (False == fileList[fileName]):
-        print("oui")
-        fileList[fileName] = True
-    else:
-        print("non")
-        fileList[fileName] = False
-
-    print(fileList)
 
 
 def refreshFileList():
@@ -40,10 +29,10 @@ def refreshFileList():
 
     fileBox.config(state="disabled")
 
-
-
 def callback(event):
+    global lastLineNum
     print("callback")
+    print(lastLineNum)
     #Get the click Contexte (Shift, Ctrl...)
     shiftClick = False
     ctrlClick = False
@@ -53,38 +42,50 @@ def callback(event):
     if (event.state & 0b0100):
         ctrlClick = True
 
-    #Shift click to be managed one day
-
     #No CTRL-CLICK: select only clicked item. Clear others
     if (False == ctrlClick):
         clearFileSelection()
 
     # get the index of the mouse click
     index = event.widget.index("@%s,%s" % (event.x, event.y))
-
+    #index is str(<line>.<column>) of the clicked text box - lineNum is the line number (starting from 0)
+    lineNum = int(index[:index.find('.')]) - 1
+    print(lineNum)
+    print(event.widget)
+ 
     # get the indices of all "adj" tags
     tag_indices = list(event.widget.tag_ranges('tag'))
+    print(tag_indices)
 
     # iterate them pairwise (start and end index)
     for start, end in zip(tag_indices[0::2], tag_indices[1::2]):
         clickedFileName = event.widget.get(start, end)
+
         # check if the tag matches the mouse click index
         if event.widget.compare(start, '<=', index) and event.widget.compare(index, '<', end):
-            if (True == ctrlClick):
-                print("invert")
-                invertSelection(clickedFileName)
+            if ((True == shiftClick) & (lastLineNum > 0)):
+                print(min(lineNum, lastLineNum), max(lineNum, lastLineNum)+1)
+                keys = list(fileList)
+                for i in range (min(lineNum, lastLineNum), max(lineNum, lastLineNum)+1):
+                    fileList[keys[i]] = True
+                    print(fileList)
+            elif (True == ctrlClick):
+                fileList[clickedFileName] = not fileList[clickedFileName]
             else:
                 fileList[clickedFileName] = True
+            lastLineNum = lineNum
 
-        if (0 == fileList[clickedFileName]):
-            print("remove",start,end)
+    #refresh visible file selection
+    for start, end in zip(tag_indices[0::2], tag_indices[1::2]):
+        clickedFileName = event.widget.get(start, end)
+        if (False == fileList[clickedFileName]):
             fileBox.tag_remove("select", start, end)
         else:
             print("add",start,end)
             fileBox.tag_add("select", start, end)
 
+
 def pdfMergeCore(destPath, sourcePath):
-    print(destPath + sourcePath)
     merger = PdfWriter()
 
     for i in fileList:
@@ -133,7 +134,7 @@ window = tk.Tk()
 window.geometry("400x600")
 
 inputFolderEntry = tk.Entry(width=50)
-inputFolderEntry.insert(0, "D:\\DCIM\\113MEDIA")
+inputFolderEntry.insert(0, "D:\\Projects\\PDFMerge\\TestFolder")
 outputFileEntry = tk.Entry(width=50)
 
 fileBox = tk.Text(
