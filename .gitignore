@@ -1,5 +1,4 @@
 Code/build
-Code/dist
 *.spec
 TestFolder
 Code/__pycache__
