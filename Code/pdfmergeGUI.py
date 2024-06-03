@@ -17,6 +17,7 @@ def refreshFileList():
     inPath = inputFolderEntry.get()
     fileBox.config(state="normal")
     fileBox.delete('1.0', "end")
+    fileList.clear()
 
     if (os.path.isdir(inPath)):
         for i in os.listdir(inPath):
@@ -31,6 +32,7 @@ def refreshFileList():
 
 def callback(event):
     global lastLineNum
+    global fileList
     print("callback")
     print(lastLineNum)
     #Get the click Contexte (Shift, Ctrl...)
@@ -63,7 +65,7 @@ def callback(event):
 
         # check if the tag matches the mouse click index
         if event.widget.compare(start, '<=', index) and event.widget.compare(index, '<', end):
-            if ((True == shiftClick) & (lastLineNum > 0)):
+            if ((True == shiftClick) & (lastLineNum >= 0)):
                 print(min(lineNum, lastLineNum), max(lineNum, lastLineNum)+1)
                 keys = list(fileList)
                 for i in range (min(lineNum, lastLineNum), max(lineNum, lastLineNum)+1):
@@ -87,19 +89,19 @@ def callback(event):
 
 def pdfMergeCore(destPath, sourcePath):
     merger = PdfWriter()
+    fileSelected = False
 
     for i in fileList:
         if (True == fileList[i]):
             print ("Merging " + sourcePath + "\\" + i)
             merger.append(sourcePath + "\\" + i)
-
-    merger.write(destPath)
-    merger.close()
-
-    for i in fileList:
-        if (True == fileList[i]):
+            fileSelected = True
             os.remove(sourcePath + "\\" + i)
+    
+    if (True == fileSelected):
+        merger.write(destPath)
 
+    merger.close()
 
 def goGetInputFolder():
     # Display the dialog for browsing files.
@@ -115,7 +117,7 @@ def handle_click():
     path = inputFolderEntry.get()
     pdfMergeCore(filename, path)
     refreshFileList()
-    clearFileSelection()
+    #clearFileSelection()
     print("click")
 
 def goGetOutputFile():
@@ -127,14 +129,14 @@ def goGetOutputFile():
     outputFileEntry.insert(0, filename)
 
 
-sourcePath = "D:\\Projects\\PDFMerge\\TestFolder"
+sourcePath = "D:\\DCIM\\113MEDIA"
 
 
 window = tk.Tk()
 window.geometry("400x600")
 
 inputFolderEntry = tk.Entry(width=50)
-inputFolderEntry.insert(0, "D:\\Projects\\PDFMerge\\TestFolder")
+inputFolderEntry.insert(0, sourcePath)
 outputFileEntry = tk.Entry(width=50)
 
 fileBox = tk.Text(
