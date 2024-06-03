@@ -4,44 +4,6 @@ import tkinter as tk
 from tkinter import filedialog
 import os
 
-"""
-def clicklabel():
-    pageNbText.config(bg="blue")
-
-window = tk.Tk()
-window.geometry("700x350")
-
-fileBox = tk.Label(
-        bg = "white",
-        width=24,
-        height=8
-        )
-
-inputFolderEntry = tk.Entry(width=50)
-
-refreshButton = tk.Button(
-    text="Rafraichir",
-    width=15,
-    height=3,
-    bg="#f0efd5",
-    fg="#788f82",
-    font='None 12 bold'
-)
-
-
-
-
-
-fileBox.bind("<Button-1>", lambda e:clicklabel())
-
-
-inputFolderEntry.pack()
-refreshButton.pack()
-fileBox.pack()
-
-
-window.mainloop()
-"""
 lastClickIndex = -1
 fileList = {}
 
