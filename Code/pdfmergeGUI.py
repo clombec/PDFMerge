@@ -7,6 +7,7 @@ import os
 fileList = {}
 lastLineNum = -1
 
+#Test
 
 def clearFileSelection():
     for i in fileList:
