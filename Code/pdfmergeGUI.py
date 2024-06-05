@@ -6,7 +6,7 @@ import os
 
 fileList = {}
 lastLineNum = -1
-
+tagIndex = []
 
 def clearFileSelection():
     for i in fileList:
@@ -14,6 +14,7 @@ def clearFileSelection():
 
 
 def refreshFileList():
+    global tagIndex
     inPath = inputFolderEntry.get()
     fileBox.config(state="normal")
     fileBox.delete('1.0', "end")
@@ -29,6 +30,7 @@ def refreshFileList():
         fileBox.insert("end", "Folder Doesn't exist")
 
     fileBox.config(state="disabled")
+    tagIndex = list(fileBox.tag_ranges('tag'))
 
 def callback(event):
     global lastLineNum
@@ -56,11 +58,10 @@ def callback(event):
     print(event.widget)
  
     # get the indices of all "adj" tags
-    tag_indices = list(event.widget.tag_ranges('tag'))
-    print(tag_indices)
+    print(tagIndex)
 
     # iterate them pairwise (start and end index)
-    for start, end in zip(tag_indices[0::2], tag_indices[1::2]):
+    for start, end in zip(tagIndex[0::2], tagIndex[1::2]):
         clickedFileName = event.widget.get(start, end)
 
         # check if the tag matches the mouse click index
@@ -78,7 +79,7 @@ def callback(event):
             lastLineNum = lineNum
 
     #refresh visible file selection
-    for start, end in zip(tag_indices[0::2], tag_indices[1::2]):
+    for start, end in zip(tagIndex[0::2], tagIndex[1::2]):
         clickedFileName = event.widget.get(start, end)
         if (False == fileList[clickedFileName]):
             fileBox.tag_remove("select", start, end)
