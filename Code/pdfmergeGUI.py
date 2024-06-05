@@ -49,7 +49,6 @@ def refreshFileList():
 
 def callback(event):
     global lastLineNum
-    global fileList
     print("callback")
     print(lastLineNum)
     #Get the click Contexte (Shift, Ctrl...)
