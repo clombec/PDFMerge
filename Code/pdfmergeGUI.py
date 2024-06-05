@@ -4,13 +4,31 @@ import tkinter as tk
 from tkinter import filedialog
 import os
 
-fileList = {}
+fileList = []
 lastLineNum = -1
 tagIndex = []
 
+fileData = []
+
+class listedFile:
+    def __init__(self, name, start, end):
+        self.name = name
+        self.bSelected = False
+        self.start = start
+        self.end = end
+
+    def select(self):
+        self.bSelected = True
+
+    def deselect(self):
+        self.bSelected = False
+
+    def toggleSelect(self):
+        self.bSelected = not self.bSelected
+
 def clearFileSelection():
-    for i in fileList:
-        fileList[i] = False
+    for f in fileList:
+        f.deselect()
 
 
 def refreshFileList():
@@ -23,7 +41,6 @@ def refreshFileList():
     if (os.path.isdir(inPath)):
         for i in os.listdir(inPath):
             if i.endswith('.pdf'):
-                fileList[i] = False
                 fileBox.insert("end", i, "tag")
                 fileBox.insert("end", "\n")
     else:
@@ -31,6 +48,8 @@ def refreshFileList():
 
     fileBox.config(state="disabled")
     tagIndex = list(fileBox.tag_ranges('tag'))
+    for start, end in zip(tagIndex[0::2], tagIndex[1::2]):
+        fileList.append(listedFile(fileBox.get(start,end),start,end))
 
 def callback(event):
     global lastLineNum
@@ -54,50 +73,34 @@ def callback(event):
     index = event.widget.index("@%s,%s" % (event.x, event.y))
     #index is str(<line>.<column>) of the clicked text box - lineNum is the line number (starting from 0)
     lineNum = int(index[:index.find('.')]) - 1
-    print(lineNum)
-    print(event.widget)
- 
-    # get the indices of all "adj" tags
-    print(tagIndex)
 
-    # iterate them pairwise (start and end index)
-    for start, end in zip(tagIndex[0::2], tagIndex[1::2]):
-        clickedFileName = event.widget.get(start, end)
-
-        # check if the tag matches the mouse click index
-        if event.widget.compare(start, '<=', index) and event.widget.compare(index, '<', end):
-            if ((True == shiftClick) & (lastLineNum >= 0)):
-                print(min(lineNum, lastLineNum), max(lineNum, lastLineNum)+1)
-                keys = list(fileList)
-                for i in range (min(lineNum, lastLineNum), max(lineNum, lastLineNum)+1):
-                    fileList[keys[i]] = True
-                    print(fileList)
-            elif (True == ctrlClick):
-                fileList[clickedFileName] = not fileList[clickedFileName]
-            else:
-                fileList[clickedFileName] = True
-            lastLineNum = lineNum
+    if ((True == shiftClick) & (lastLineNum >= 0)):
+        for i in range (min(lineNum, lastLineNum), max(lineNum, lastLineNum)+1):
+            fileList[i].bSelected = True
+            print(fileList[i])
+    elif (True == ctrlClick):
+        fileList[lineNum].toggleSelect()
+    else:
+        fileList[lineNum].select()
+    lastLineNum = lineNum
 
     #refresh visible file selection
-    for start, end in zip(tagIndex[0::2], tagIndex[1::2]):
-        clickedFileName = event.widget.get(start, end)
-        if (False == fileList[clickedFileName]):
-            fileBox.tag_remove("select", start, end)
+    for f in fileList:
+        if (f.bSelected):
+            fileBox.tag_add("select", f.start, f.end)
         else:
-            print("add",start,end)
-            fileBox.tag_add("select", start, end)
-
+            fileBox.tag_remove("select", f.start, f.end)
 
 def pdfMergeCore(destPath, sourcePath):
     merger = PdfWriter()
     fileSelected = False
 
-    for i in fileList:
-        if (True == fileList[i]):
-            print ("Merging " + sourcePath + "\\" + i)
-            merger.append(sourcePath + "\\" + i)
+    for f in fileList:
+        if (f.bSelected):
+            print ("Merging " + sourcePath + "\\" + f.name)
+            merger.append(sourcePath + "\\" + f.name)
             fileSelected = True
-            os.remove(sourcePath + "\\" + i)
+            os.remove(sourcePath + "\\" + f.name)
     
     if (True == fileSelected):
         merger.write(destPath)
