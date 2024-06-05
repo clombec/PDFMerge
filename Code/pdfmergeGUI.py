@@ -6,8 +6,6 @@ import os
 
 fileList = []
 lastLineNum = -1
-tagIndex = []
-
 fileData = []
 
 class listedFile:
@@ -32,7 +30,6 @@ def clearFileSelection():
 
 
 def refreshFileList():
-    global tagIndex
     inPath = inputFolderEntry.get()
     fileBox.config(state="normal")
     fileBox.delete('1.0', "end")
