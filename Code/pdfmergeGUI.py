@@ -6,7 +6,6 @@ import os
 
 fileList = []
 lastLineNum = -1
-fileData = []
 
 class listedFile:
     def __init__(self, name, start, end):
