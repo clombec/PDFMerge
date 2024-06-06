@@ -2,3 +2,4 @@ Code/build
 *.spec
 TestFolder
 Code/__pycache__
+*.bak
