@@ -2,12 +2,16 @@ from pypdf import PdfWriter
 import pdfmerge
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import *
 import os
+
 
 #fileList: List of listedFile class objects.
 #Contains a list of all files available in the input folder
 fileList = []
 lastLineNum = -1
+
+sourcePath = "D:\\DCIM\\113MEDIA"
 
 #list of files from input folder. Each file is defined with its name, state (Selected or not), and position in fileBox
 class listedFile:
@@ -145,79 +149,157 @@ def goGetOutputFile():
     outputFileEntry.insert(0, filename)
 
 
-sourcePath = "D:\\DCIM\\113MEDIA"
+"""
+########################################################################
+##
+## Geometry definition
+##
+########################################################################
+"""
 
 window = tk.Tk()
-window.geometry("400x600")
 
-inputFolderEntry = tk.Entry(width=50)
+#
+#
+# Input Folder label, Entry test and browse Button, within inputFrame
+#
+#
+inputFrame = tk.Frame(
+    relief=tk.GROOVE,
+    borderwidth = 2
+    )
+
+#Input Label
+tk.Label(
+    master=inputFrame,
+    text="Input Folder",
+    font="None 10 bold"
+).pack(pady=5)
+
+#Input Folder Entry text
+inputFolderEntry = tk.Entry(master = inputFrame, width=50, font='None 10')
+inputFolderEntry.pack(side=tk.LEFT, pady=5,padx=5)
 inputFolderEntry.insert(0, sourcePath)
 
-outputFileEntry = tk.Entry(width=50)
+#Browse for input folder Button
+inputFolderBt = tk.Button(
+    master = inputFrame,
+    text="...",
+    width=5,
+    height=1,
+    bg="#f0efd5",
+    fg="#788f82",
+    font='None 8 bold',
+    command = goGetInputFolder
+)
+inputFolderBt.pack(side=tk.LEFT, pady=5,padx=5)
 
-fileBox = tk.Text(
-    window,
-    height = 12,
-    width = 32
+#
+#
+# file Box frame, containing file box list, and refresh button
+#
+#
+fileFrame = tk.Frame(
+    relief=tk.GROOVE,
+    borderwidth=2,
+    width = 500,
+    height = 500
     )
-#Create tag for file Box
+
+#File list display box
+fileBox = tk.Text(
+    master = fileFrame,
+    height = 15,
+    width = 44
+    )
+fileBox.pack(side=tk.LEFT,padx=5,pady=5)
+
+#Create tag for file Box. Tag is used to differentiate file name entries when clicked. Tag is bind to click
 fileBox.tag_config("tag", foreground="#788f82")
 fileBox.tag_bind("tag", "<Button-1>", fileClicked)
 fileBox.tag_config("select", background="#f0efd5")
-#disable all binds for fileBox: now a Click in the file box will only execute the event bind to "tag". It avoids text selection
+#disable all other binds for fileBox: now a Click in the file box will only execute the event bind to "tag". It avoids text selection
 fileBox.bindtags((str(fileBox), str(window), "all"))
 
+photo = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\path1.png")
 
-inputFolderBt = tk.Button(
-    text="...",
-    width=5,
-    height=2,
+#Refresh Button
+tk.Button(
+    master = fileFrame,
+    text="Rafraichir",
+    width=50,
+    height=50,
     bg="#f0efd5",
     fg="#788f82",
     font='None 12 bold',
-    command = goGetInputFolder
-)
+    command = goRefreshFileList,
+    image=photo
+).pack(side=tk.LEFT)
+
+#
+#
+#Output file frame, with label, text entry and button
+#
+#
+outputFrame = tk.Frame(
+    relief=tk.GROOVE,
+    borderwidth=2)
+
+#Output Label
+tk.Label(
+    master=outputFrame,
+    text="Output File",
+    font="None 10 bold"
+).pack(pady=5)
+
+outputFileEntry = tk.Entry(
+    master = outputFrame,
+    width=50,
+    font='None 10'
+    )
+outputFileEntry.pack(side=tk.LEFT,pady=5,padx=5)
 
 outputFileBt = tk.Button(
+    master = outputFrame,
     text="...",
     width=5,
-    height=2,
+    height=1,
     bg="#f0efd5",
     fg="#788f82",
-    font='None 12 bold',
+    font='None 8 bold',
     command = goGetOutputFile
 )
+outputFileBt.pack(side=tk.LEFT,pady=5,padx=5)
 
-refreshButton = tk.Button(
-    text="Rafraichir",
-    width=15,
-    height=3,
-    bg="#f0efd5",
-    fg="#788f82",
-    font='None 12 bold',
-    command = goRefreshFileList
-)
+#
+#
+#Go button frame, with Go button only
+#
+#
+goFrame = tk.Frame(
+    relief=tk.FLAT,
+    borderwidth = 2
+    )
 
-goButton = tk.Button(
+#Go Button
+tk.Button(
+    master = goFrame,
     text="GO",
     width=25,
     height=5,
     bg="#f0efd5",
     fg="#788f82",
     command=goMergeSelected
-)
+).pack(padx=5,pady=5)
 
 #Start with updated fileBox using the default input folder
 goRefreshFileList()
 
 #Build the window
-inputFolderEntry.pack()
-inputFolderBt.pack()
-refreshButton.pack()
-fileBox.pack()
-outputFileEntry.pack()
-outputFileBt.pack()
-goButton.pack()
+inputFrame.pack(pady=5)
+fileFrame.pack(expand=True,pady=5)
+outputFrame.pack(pady=5)
+goFrame.pack(pady=5)
 
 #run
 window.mainloop()
