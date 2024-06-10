@@ -101,7 +101,6 @@ def clearFileSelection():
 #Force a refresh of the fileBox = display of all files from the input folder.
 #All files are not-selected after the refresh
 def goRefreshFileList():
-    global aindex
     inPath = inputFolderEntry.get()
     fileBox.config(state="normal")
     fileBox.delete('1.0', "end")
@@ -116,7 +115,6 @@ def goRefreshFileList():
         infoLabel.updateBg("SystemButtonFace")
     else:
         infoLabel.updateText("Input folder doesn't exist")
-        print(infoLabel.label["bg"])
         infoLabel.updateBg("red")
 
     fileBox.config(state="disabled")
