@@ -108,7 +108,7 @@ def goRefreshFileList():
 
     if (os.path.isdir(inPath)):
         for i in os.listdir(inPath):
-            if i.endswith('.pdf'):
+            if ((i.endswith('.pdf')) or (i.endswith('.PDF'))):
                 fileBox.insert("end", i, "tag")
                 fileBox.insert("end", "\n")
         infoLabel.updateText("")
@@ -242,33 +242,33 @@ languageFrame = tk.Frame(
     height = 500
 )
 
-photo1 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\unionjack.png")
+#photo1 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\unionjack.png")
 
 tk.Button(
     master = languageFrame,
     text="",
-    width=25,
-    height=20,
+    width=1,
+    height=1,
     bg="#f0efd5",
     fg="#788f82",
     font='None 8 bold',
     command = langChangeEnglish,
-    image=photo1
+#    image=photo1
 ).pack(side=tk.LEFT)
 
 
-photo2 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\frenchflag.png")
+#photo2 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\frenchflag.png")
 
 tk.Button(
     master = languageFrame,
     text="",
-    width=25,
-    height=20,
+    width=1,
+    height=1,
     bg="#f0efd5",
     fg="#788f82",
     font='None 8 bold',
     command = langChangeFrench,
-    image=photo2
+#    image=photo2
 ).pack(side=tk.LEFT)
 
 #
@@ -330,19 +330,19 @@ fileBox.tag_config("select", background="#f0efd5")
 #disable all other binds for fileBox: now a Click in the file box will only execute the event bind to "tag". It avoids text selection
 fileBox.bindtags((str(fileBox), str(window), "all"))
 
-photo = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\path1.png")
+#photo = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\path1.png")
 
 #Refresh Button
 tk.Button(
     master = fileFrame,
     text="Rafraichir",
-    width=50,
-    height=50,
+    width=1,
+    height=1,
     bg="#f0efd5",
     fg="#788f82",
     font='None 12 bold',
     command = goRefreshFileList,
-    image=photo
+#    image=photo
 ).pack(side=tk.LEFT)
 
 #
