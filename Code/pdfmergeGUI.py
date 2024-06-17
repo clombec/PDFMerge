@@ -45,7 +45,7 @@ def goRefreshFileList():
 
     if (os.path.isdir(inPath)):
         for i in os.listdir(inPath):
-            if i.endswith('.pdf'):
+            if ((i.endswith('.pdf')) or (i.endswith('.PDF'))):
                 fileBox.insert("end", i, "tag")
                 fileBox.insert("end", "\n")
     else:
