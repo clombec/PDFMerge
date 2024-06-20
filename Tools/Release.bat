@@ -1,5 +1,5 @@
 cd ../code 
-pyinstaller --noconsole -F pdfmergeGUI.py
+pyinstaller -F pdfmergeGUI.py
 rem this command may generate a windows virus error
 rem see https://stackoverflow.com/questions/77346372/pyinstaller-says-i-made-a-virus
 

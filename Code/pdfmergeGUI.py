@@ -4,7 +4,70 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import *
 import os
+import languages
 
+
+"""
+#
+# Language data
+#
+"""
+textAllLang = [
+    "Input folder doesn't exist", "Le dossier d'entrée n'existe pas",
+    "Input Folder", "Dossier d'entrée",
+    "Output File", "Fichier de sortie",
+    "Missing output file path and name", "Fichier de sortie manquant",
+    "Done","Fusion",
+    "OK","OK"
+]
+l = languages.lang(languages.FRENCH,textAllLang,2)
+
+class labelText:
+    def __init__(self,master,text,l):
+        self.text = text
+        self.label = tk.Label(
+            master=master,
+            text="",
+            font="None 10 bold"
+        )
+        self.label.pack(pady=5)
+        self.langDict=l
+
+    def refreshLabel(self):
+        try:
+            self.label["text"]=self.langDict.textDisplay[self.text]
+        except KeyError:
+            #In case the message is not in language Dictionnary, display the given message directly
+            self.label["text"]=self.text
+
+    def updateText(self,newTxt):
+        self.text=newTxt
+        self.refreshLabel()
+
+    def updateBg(self,color):
+        self.label["bg"] = color
+
+
+def refreshLabels():
+    l.initDictionary()
+    for lb in allLabels:
+        lb.refreshLabel()
+
+def langChangeEnglish():
+    print("English")
+    l.selected=languages.ENGLISH
+    refreshLabels()
+        
+def langChangeFrench():
+    l.selected=languages.FRENCH
+    refreshLabels()
+    print("French")
+
+"""
+#
+# Code
+#
+"""
 
 #fileList: List of listedFile class objects.
 #Contains a list of all files available in the input folder
@@ -48,14 +111,17 @@ def goRefreshFileList():
             if ((i.endswith('.pdf')) or (i.endswith('.PDF'))):
                 fileBox.insert("end", i, "tag")
                 fileBox.insert("end", "\n")
+        infoLabel.updateText("")
+        infoLabel.updateBg("SystemButtonFace")
     else:
-        fileBox.insert("end", "Folder Doesn't exist")
+        infoLabel.updateText("Input folder doesn't exist")
+        infoLabel.updateBg("red")
 
     fileBox.config(state="disabled")
     tagIndex = list(fileBox.tag_ranges('tag'))
     for start, end in zip(tagIndex[0::2], tagIndex[1::2]):
         fileList.append(listedFile(fileBox.get(start,end),start,end))
-
+       
 def fileClicked(event):
     #define as global to allow write of the variable, available from other functions
     global lastLineNum
@@ -130,7 +196,8 @@ def goMergeSelected():
     filename = outputFileEntry.get()
     #If no output file has been selected, do nothing
     if (0 == len(filename)):
-        print("nope")
+        infoLabel.updateText("Missing output file path and name")
+        infoLabel.updateBg("red")
         return
     
     #Get full path of the output file
@@ -139,6 +206,9 @@ def goMergeSelected():
     pdfMergeCore(filename, filepath)
     #Refresh fileBox with remaining files (selected one have been deleted)
     goRefreshFileList()
+
+    infoLabel.updateText("Done")
+    infoLabel.updateBg("Green")
 
 # Display the dialog for browsing files
 def goGetOutputFile():
@@ -158,6 +228,48 @@ def goGetOutputFile():
 """
 
 window = tk.Tk()
+allLabels = []
+
+#
+#
+# Languages buttons
+#
+#
+languageFrame = tk.Frame(
+    relief=tk.FLAT,
+    borderwidth=2,
+    width = 500,
+    height = 500
+)
+
+photo1 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\unionjack.png")
+
+tk.Button(
+    master = languageFrame,
+    text="",
+    width=25,
+    height=20,
+    bg="#f0efd5",
+    fg="#788f82",
+    font='None 8 bold',
+    command = langChangeEnglish,
+    image=photo1
+).pack(side=tk.LEFT)
+
+
+photo2 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\frenchflag.png")
+
+tk.Button(
+    master = languageFrame,
+    text="",
+    width=25,
+    height=20,
+    bg="#f0efd5",
+    fg="#788f82",
+    font='None 8 bold',
+    command = langChangeFrench,
+    image=photo2
+).pack(side=tk.LEFT)
 
 #
 #
@@ -170,11 +282,8 @@ inputFrame = tk.Frame(
     )
 
 #Input Label
-tk.Label(
-    master=inputFrame,
-    text="Input Folder",
-    font="None 10 bold"
-).pack(pady=5)
+inuputLabel = labelText(inputFrame,"Input Folder",l)
+allLabels.append(inuputLabel)
 
 #Input Folder Entry text
 inputFolderEntry = tk.Entry(master = inputFrame, width=50, font='None 10')
@@ -246,11 +355,8 @@ outputFrame = tk.Frame(
     borderwidth=2)
 
 #Output Label
-tk.Label(
-    master=outputFrame,
-    text="Output File",
-    font="None 10 bold"
-).pack(pady=5)
+outputLabel = labelText(outputFrame,"Output File",l)
+allLabels.append(outputLabel)
 
 outputFileEntry = tk.Entry(
     master = outputFrame,
@@ -292,14 +398,34 @@ tk.Button(
     command=goMergeSelected
 ).pack(padx=5,pady=5)
 
+
+#
+#
+# Info file frame, with label only
+#
+#
+infoFrame = tk.Frame(
+    relief=tk.FLAT,
+    borderwidth=2,
+    width=50
+    )
+
+infoLabel = labelText(infoFrame,"",l)
+allLabels.append(infoLabel)
+
 #Start with updated fileBox using the default input folder
 goRefreshFileList()
 
+#Display all etxt using slected language
+refreshLabels()
+
 #Build the window
+languageFrame.pack(pady=5,side=tk.BOTTOM)
 inputFrame.pack(pady=5)
 fileFrame.pack(expand=True,pady=5)
 outputFrame.pack(pady=5)
 goFrame.pack(pady=5)
+infoFrame.pack(pady=5)
 
 #run
 window.mainloop()
