@@ -358,8 +358,8 @@ else:
 tk.Button(
     master = fileFrame,
     text="Rafraichir",
-    width=1,
-    height=1,
+    width=bw,
+    height=bh,
     bg="#f0efd5",
     fg="#788f82",
     font='None 12 bold',
