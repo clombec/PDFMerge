@@ -6,6 +6,7 @@ from tkinter import *
 import os
 import languages
 
+__NOIMAGE__ = True
 
 """
 #
@@ -242,7 +243,11 @@ languageFrame = tk.Frame(
     height = 500
 )
 
-#photo1 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\unionjack.png")
+if __NOIMAGE__:
+    photo1 = ""
+else:
+    photo1 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\unionjack.png")
+
 
 tk.Button(
     master = languageFrame,
@@ -253,11 +258,13 @@ tk.Button(
     fg="#788f82",
     font='None 8 bold',
     command = langChangeEnglish,
-#    image=photo1
+    image=photo1
 ).pack(side=tk.LEFT)
 
-
-#photo2 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\frenchflag.png")
+if __NOIMAGE__:
+    photo2 = ""
+else:
+    photo2 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\frenchflag.png")
 
 tk.Button(
     master = languageFrame,
@@ -268,7 +275,7 @@ tk.Button(
     fg="#788f82",
     font='None 8 bold',
     command = langChangeFrench,
-#    image=photo2
+    image=photo2
 ).pack(side=tk.LEFT)
 
 #
@@ -330,7 +337,10 @@ fileBox.tag_config("select", background="#f0efd5")
 #disable all other binds for fileBox: now a Click in the file box will only execute the event bind to "tag". It avoids text selection
 fileBox.bindtags((str(fileBox), str(window), "all"))
 
-#photo = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\path1.png")
+if __NOIMAGE__:
+    photo = ""
+else:
+    photo = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\path1.png")
 
 #Refresh Button
 tk.Button(
