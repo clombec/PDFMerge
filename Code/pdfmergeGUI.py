@@ -245,15 +245,19 @@ languageFrame = tk.Frame(
 
 if __NOIMAGE__:
     photo1 = ""
+    bw = 1
+    bh = 1
 else:
     photo1 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\unionjack.png")
+    bw = 25
+    bh = 20
 
 
 tk.Button(
     master = languageFrame,
     text="",
-    width=1,
-    height=1,
+    width=bw,
+    height=bh,
     bg="#f0efd5",
     fg="#788f82",
     font='None 8 bold',
@@ -263,14 +267,18 @@ tk.Button(
 
 if __NOIMAGE__:
     photo2 = ""
+    bw = 1
+    bh = 1
 else:
     photo2 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\frenchflag.png")
+    bw = 25
+    bh = 20
 
 tk.Button(
     master = languageFrame,
     text="",
-    width=1,
-    height=1,
+    width=bw,
+    height=bh,
     bg="#f0efd5",
     fg="#788f82",
     font='None 8 bold',
@@ -339,8 +347,12 @@ fileBox.bindtags((str(fileBox), str(window), "all"))
 
 if __NOIMAGE__:
     photo = ""
+    bw = 1
+    bh = 1
 else:
     photo = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\path1.png")
+    bw = 50
+    bh = 50
 
 #Refresh Button
 tk.Button(
