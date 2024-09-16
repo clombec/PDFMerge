@@ -6,6 +6,7 @@ from tkinter import *
 import os
 import languages
 
+__NOIMAGE__ = True
 
 """
 #
@@ -242,13 +243,21 @@ languageFrame = tk.Frame(
     height = 500
 )
 
-photo1 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\unionjack.png")
+if __NOIMAGE__:
+    photo1 = ""
+    bw = 1
+    bh = 1
+else:
+    photo1 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\unionjack.png")
+    bw = 25
+    bh = 20
+
 
 tk.Button(
     master = languageFrame,
     text="",
-    width=25,
-    height=20,
+    width=bw,
+    height=bh,
     bg="#f0efd5",
     fg="#788f82",
     font='None 8 bold',
@@ -256,14 +265,20 @@ tk.Button(
     image=photo1
 ).pack(side=tk.LEFT)
 
-
-photo2 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\frenchflag.png")
+if __NOIMAGE__:
+    photo2 = ""
+    bw = 1
+    bh = 1
+else:
+    photo2 = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\frenchflag.png")
+    bw = 25
+    bh = 20
 
 tk.Button(
     master = languageFrame,
     text="",
-    width=25,
-    height=20,
+    width=bw,
+    height=bh,
     bg="#f0efd5",
     fg="#788f82",
     font='None 8 bold',
@@ -330,14 +345,21 @@ fileBox.tag_config("select", background="#f0efd5")
 #disable all other binds for fileBox: now a Click in the file box will only execute the event bind to "tag". It avoids text selection
 fileBox.bindtags((str(fileBox), str(window), "all"))
 
-photo = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\path1.png")
+if __NOIMAGE__:
+    photo = ""
+    bw = 1
+    bh = 1
+else:
+    photo = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\path1.png")
+    bw = 50
+    bh = 50
 
 #Refresh Button
 tk.Button(
     master = fileFrame,
     text="Rafraichir",
-    width=50,
-    height=50,
+    width=bw,
+    height=bh,
     bg="#f0efd5",
     fg="#788f82",
     font='None 12 bold',
