@@ -2,7 +2,7 @@ from pypdf import PdfWriter
 import pdfmerge
 import tkinter as tk
 from tkinter import filedialog
-from tkinter import *
+from tkinter import messagebox
 import os
 import languages
 
@@ -19,7 +19,9 @@ textAllLang = [
     "Output File", "Fichier de sortie",
     "Missing output file path and name", "Fichier de sortie manquant",
     "Done","Fusion",
-    "OK","OK"
+    "OK","OK",
+    "Are you sure you want to overwrite the file?","Etes-vous sûr de vouloir écraser le fichier ?",
+    "No input file selected","Aucun fichier d'entrée sélectionné"
 ]
 l = languages.lang(languages.FRENCH,textAllLang,2)
 
@@ -163,24 +165,31 @@ def fileClicked(event):
             fileBox.tag_remove("select", f.start, f.end)
 
 #Execution function. Get all selected files, merge them into output filename and delete selected files
+#Return True if merge is done, False if not
 def pdfMergeCore(destPath, sourcePath):
     merger = PdfWriter()
 
-    #Only write output file if at least one input file has been selected 
-    fileSelected = False
+    # #Only write output file if at least one input file has been selected 
+    # fileSelected = False
+
+    if (os.path.isfile(destPath)):
+        if (messagebox.askokcancel(title="OK", message=l.textDisplay["Are you sure you want to overwrite the file?"]) == False):
+            return False
 
     for f in fileList:
         if (f.bSelected):
             print ("Merging " + sourcePath + "\\" + f.name)
             merger.append(sourcePath + "\\" + f.name)
-            fileSelected = True
+            # fileSelected = True
             os.remove(sourcePath + "\\" + f.name)
 
-    #Only write output file if at least one input file has been selected 
-    if (True == fileSelected):
-        merger.write(destPath)
+    # #Only write output file if at least one input file has been selected 
+    # if (True == fileSelected):
+    merger.write(destPath)
 
     merger.close()
+
+    return True
 
 #Open the dialog box to select the input folder
 def goGetInputFolder():
@@ -201,15 +210,23 @@ def goMergeSelected():
         infoLabel.updateBg("red")
         return
     
+    if (0 == len(fileList)) or (all(f.bSelected == False for f in fileList)):
+        infoLabel.updateText("No input file selected")
+        infoLabel.updateBg("red")
+        return
+    
     #Get full path of the output file
     filepath = inputFolderEntry.get()
     #Execute merge
-    pdfMergeCore(filename, filepath)
+    result = pdfMergeCore(filename, filepath)
+
     #Refresh fileBox with remaining files (selected one have been deleted)
     goRefreshFileList()
 
-    infoLabel.updateText("Done")
-    infoLabel.updateBg("Green")
+    #Display result if merge is executed
+    if result:
+        infoLabel.updateText("Done")
+        infoLabel.updateBg("Green")
 
 # Display the dialog for browsing files
 def goGetOutputFile():
@@ -297,8 +314,8 @@ inputFrame = tk.Frame(
     )
 
 #Input Label
-inuputLabel = labelText(inputFrame,"Input Folder",l)
-allLabels.append(inuputLabel)
+inputLabel = labelText(inputFrame,"Input Folder",l)
+allLabels.append(inputLabel)
 
 #Input Folder Entry text
 inputFolderEntry = tk.Entry(master = inputFrame, width=50, font='None 10')
