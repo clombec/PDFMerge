@@ -7,6 +7,8 @@ import os
 import languages
 
 __NOIMAGE__ = True
+__VERSION__ = "1.0.0"
+
 
 """
 #
@@ -77,7 +79,7 @@ def langChangeFrench():
 fileList = []
 lastLineNum = -1
 
-sourcePath = "D:\\DCIM\\113MEDIA"
+sourcePath = "E:\\DCIM\\113MEDIA"
 
 #list of files from input folder. Each file is defined with its name, state (Selected or not), and position in fileBox
 class listedFile:
@@ -364,7 +366,7 @@ fileBox.bindtags((str(fileBox), str(window), "all"))
 
 if __NOIMAGE__:
     photo = ""
-    bw = 1
+    bw = 3
     bh = 1
 else:
     photo = PhotoImage(file="D:\\Projects\\PDFMerge\\Images\\path1.png")
@@ -374,7 +376,7 @@ else:
 #Refresh Button
 tk.Button(
     master = fileFrame,
-    text="Rafraichir",
+    text="< >",
     width=bw,
     height=bh,
     bg="#f0efd5",
@@ -452,6 +454,21 @@ infoFrame = tk.Frame(
 infoLabel = labelText(infoFrame,"",l)
 allLabels.append(infoLabel)
 
+#
+#
+# Version frame, with version label only
+#
+#
+version = __VERSION__
+versionFrame = tk.Frame(
+    relief=tk.FLAT,
+    borderwidth=2,
+    width=50
+    )
+
+version_label = tk.Label(versionFrame, text=f"Version {version}", anchor="w")
+version_label.pack()
+
 #Start with updated fileBox using the default input folder
 goRefreshFileList()
 
@@ -465,6 +482,7 @@ fileFrame.pack(expand=True,pady=5)
 outputFrame.pack(pady=5)
 goFrame.pack(pady=5)
 infoFrame.pack(pady=5)
+versionFrame.pack(pady=5)
 
 #run
 window.mainloop()
