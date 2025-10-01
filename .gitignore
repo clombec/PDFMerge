@@ -3,3 +3,5 @@ Code/build
 TestFolder
 Code/__pycache__
 *.bak
+Test
+.DS_Store
