@@ -1,0 +1,10 @@
+1. In command prompt, navigate to this PDFMerge folder
+2. activate local venv:
+	- On Windows: .venv\Scripts\activate
+3. Install pyinstaller if not already available in venv: pip install pyinstaller
+4. Go to Tools
+	cd Tools
+4. Run Release.bat
+-->
+Exe is generated in ../code/dist, and copied in Z:\Lombec\Maison\Scanner
+Commit updates (exe from code/dist)
